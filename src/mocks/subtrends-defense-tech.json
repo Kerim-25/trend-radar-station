@@ -1,0 +1,42 @@
+[
+  {
+    "id": "military-drones",
+    "trend_id": "defense-tech",
+    "name": "Military Drones", 
+    "description": "Autonomous and semi-autonomous unmanned aerial vehicles for surveillance, reconnaissance, and combat operations.",
+    "momentum_score": 96,
+    "sparkline": [45, 52, 58, 61, 67, 72, 75, 78, 82, 85, 88, 91, 94, 92, 89, 91, 93, 95, 96, 94, 92, 95, 97, 96, 94, 96, 98, 97, 95, 96]
+  },
+  {
+    "id": "dual-use-ai",
+    "trend_id": "defense-tech", 
+    "name": "Dual-use AI",
+    "description": "Artificial intelligence technologies with both civilian and military applications, raising ethical and regulatory concerns.",
+    "momentum_score": 89,
+    "sparkline": [62, 64, 67, 70, 72, 75, 78, 80, 82, 84, 86, 87, 85, 83, 81, 84, 86, 88, 89, 87, 85, 88, 90, 89, 87, 89, 91, 90, 88, 89]
+  },
+  {
+    "id": "counter-uas",
+    "trend_id": "defense-tech",
+    "name": "Counter-UAS Systems", 
+    "description": "Technologies designed to detect, track, and neutralize hostile unmanned aircraft systems in military and civilian contexts.",
+    "momentum_score": 84,
+    "sparkline": [55, 58, 61, 64, 67, 70, 72, 74, 76, 78, 79, 81, 83, 84, 82, 80, 82, 84, 86, 84, 82, 84, 85, 84, 82, 84, 86, 85, 83, 84]
+  },
+  {
+    "id": "military-satellite",
+    "trend_id": "defense-tech",
+    "name": "Military Satellites",
+    "description": "Space-based assets for communications, surveillance, navigation, and potential offensive capabilities.",
+    "momentum_score": 78,
+    "sparkline": [50, 52, 55, 58, 60, 63, 65, 67, 69, 71, 73, 75, 76, 78, 77, 75, 77, 79, 80, 78, 76, 78, 80, 79, 77, 78, 80, 79, 77, 78]
+  },
+  {
+    "id": "cyber-warfare",
+    "trend_id": "defense-tech",
+    "name": "Cyber Warfare Tools",
+    "description": "Software and systems designed for offensive and defensive cyber operations in military contexts.",
+    "momentum_score": 72,
+    "sparkline": [48, 50, 52, 54, 56, 58, 60, 62, 64, 66, 68, 69, 71, 72, 70, 68, 70, 72, 74, 72, 70, 72, 74, 73, 71, 72, 74, 73, 71, 72]
+  }
+]

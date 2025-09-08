@@ -1,13 +1,56 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+import { useState } from "react";
+import { Subtrend } from "@/types";
+import { HeroSection } from "@/components/hero-section";
+import { SubtrendsSection } from "@/components/subtrends-section";
+import { SubtrendDetailDrawer } from "@/components/subtrend-detail-drawer";
+import { SettingsPanel } from "@/components/settings-panel";
 
 const Index = () => {
+  const [selectedTrendId, setSelectedTrendId] = useState<string | null>(null);
+  const [selectedSubtrend, setSelectedSubtrend] = useState<Subtrend | null>(null);
+  const [isDetailOpen, setIsDetailOpen] = useState(false);
+
+  const handleExploreClick = (trendId: string) => {
+    setSelectedTrendId(trendId);
+    
+    // Scroll to subtrends section
+    const subtrendsSection = document.getElementById('subtrends-section');
+    if (subtrendsSection) {
+      subtrendsSection.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
+  const handleSubtrendClick = (subtrend: Subtrend) => {
+    setSelectedSubtrend(subtrend);
+    setIsDetailOpen(true);
+  };
+
+  const handleCloseDetail = () => {
+    setIsDetailOpen(false);
+    setSelectedSubtrend(null);
+  };
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background">
-      <div className="text-center">
-        <h1 className="mb-4 text-4xl font-bold">Welcome to Your Blank App</h1>
-        <p className="text-xl text-muted-foreground">Start building your amazing project here!</p>
-      </div>
-    </div>
+    <main className="min-h-screen">
+      {/* Settings Panel */}
+      <SettingsPanel />
+      
+      {/* Hero Section */}
+      <HeroSection onExploreClick={handleExploreClick} />
+      
+      {/* Subtrends Section */}
+      <SubtrendsSection
+        selectedTrendId={selectedTrendId}
+        onSubtrendClick={handleSubtrendClick}
+      />
+      
+      {/* Subtrend Detail Drawer */}
+      <SubtrendDetailDrawer
+        subtrend={selectedSubtrend}
+        isOpen={isDetailOpen}
+        onClose={handleCloseDetail}
+      />
+    </main>
   );
 };
 

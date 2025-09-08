@@ -1,0 +1,26 @@
+[
+  {
+    "id": "defense-tech",
+    "name": "Defense Technology",
+    "summary": "Military applications of emerging technologies including AI-powered defense systems, autonomous weapons, and cybersecurity solutions.",
+    "momentum_score": 94,
+    "change_30d_pct": 23.5,
+    "image_url": null
+  },
+  {
+    "id": "climate-solutions", 
+    "name": "Climate Solutions",
+    "summary": "Technologies addressing climate change through carbon capture, renewable energy innovations, and sustainable manufacturing processes.",
+    "momentum_score": 87,
+    "change_30d_pct": 18.2,
+    "image_url": null
+  },
+  {
+    "id": "longevity-biotech",
+    "name": "Longevity Biotech",
+    "summary": "Biotechnology focused on extending human lifespan through gene therapy, cellular reprogramming, and anti-aging therapeutics.",
+    "momentum_score": 76,
+    "change_30d_pct": -4.8,
+    "image_url": null
+  }
+]

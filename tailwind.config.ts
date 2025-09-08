@@ -19,6 +19,8 @@ export default {
         ring: "hsl(var(--ring))",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
+        surface: "hsl(var(--surface))",
+        "surface-elevated": "hsl(var(--surface-elevated))",
         primary: {
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",
@@ -47,16 +49,27 @@ export default {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-        sidebar: {
-          DEFAULT: "hsl(var(--sidebar-background))",
-          foreground: "hsl(var(--sidebar-foreground))",
-          primary: "hsl(var(--sidebar-primary))",
-          "primary-foreground": "hsl(var(--sidebar-primary-foreground))",
-          accent: "hsl(var(--sidebar-accent))",
-          "accent-foreground": "hsl(var(--sidebar-accent-foreground))",
-          border: "hsl(var(--sidebar-border))",
-          ring: "hsl(var(--sidebar-ring))",
+        momentum: {
+          up: "hsl(var(--momentum-up))",
+          down: "hsl(var(--momentum-down))",
+          neutral: "hsl(var(--momentum-neutral))",
         },
+      },
+      backgroundImage: {
+        "gradient-hero": "var(--gradient-hero)",
+        "gradient-glass": "var(--gradient-glass)", 
+        "gradient-momentum-up": "var(--gradient-momentum-up)",
+        "gradient-momentum-down": "var(--gradient-momentum-down)",
+      },
+      boxShadow: {
+        glass: "var(--shadow-glass)",
+        momentum: "var(--shadow-momentum)",
+        card: "var(--shadow-card)",
+      },
+      transitionDuration: {
+        fast: "var(--duration-fast)",
+        normal: "var(--duration-normal)",
+        slow: "var(--duration-slow)",
       },
       borderRadius: {
         lg: "var(--radius)",
