@@ -7,6 +7,7 @@ export interface Trend {
   momentum_score: number; // 0-100
   change_30d_pct: number; // percentage change
   image_url?: string;
+  bg_media_url?: string; // moving background video/image
 }
 
 export interface Subtrend {
@@ -15,7 +16,7 @@ export interface Subtrend {
   name: string;
   description: string;
   momentum_score: number;
-  sparkline: number[]; // array of daily values for last 30 days
+  change_30d_pct: number; // percentage change instead of sparkline
 }
 
 export interface Startup {

@@ -15,6 +15,16 @@ interface TrendCardProps {
 export function TrendCard({ trend, rank, onClick, className }: TrendCardProps) {
   const isTopTrend = rank === 1;
   
+  // Rank-based styling for clear hierarchy
+  const getRankClasses = () => {
+    switch (rank) {
+      case 1: return "rank-1 premium-sparkle";
+      case 2: return "rank-2"; 
+      case 3: return "rank-3";
+      default: return "";
+    }
+  };
+  
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}

@@ -18,6 +18,8 @@ export default {
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
         background: "hsl(var(--background))",
+        "background-secondary": "hsl(var(--background-secondary))",
+        "background-accent": "hsl(var(--background-accent))",
         foreground: "hsl(var(--foreground))",
         surface: "hsl(var(--surface))",
         "surface-elevated": "hsl(var(--surface-elevated))",
@@ -54,10 +56,15 @@ export default {
           down: "hsl(var(--momentum-down))",
           neutral: "hsl(var(--momentum-neutral))",
         },
+        signature: {
+          yellow: "hsl(var(--signature-yellow))",
+          teal: "hsl(var(--signature-teal))",
+        },
       },
       backgroundImage: {
         "gradient-hero": "var(--gradient-hero)",
         "gradient-glass": "var(--gradient-glass)", 
+        "gradient-cta": "var(--gradient-cta)",
         "gradient-momentum-up": "var(--gradient-momentum-up)",
         "gradient-momentum-down": "var(--gradient-momentum-down)",
       },
@@ -65,6 +72,7 @@ export default {
         glass: "var(--shadow-glass)",
         momentum: "var(--shadow-momentum)",
         card: "var(--shadow-card)",
+        cta: "var(--shadow-cta)",
       },
       transitionDuration: {
         fast: "var(--duration-fast)",

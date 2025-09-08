@@ -5,11 +5,10 @@ import { fetchStartups } from "@/lib/api";
 import { StartupListItem } from "./startup-list-item";
 import { LoadingSkeleton } from "./loading-skeleton";
 import { MomentumBadge } from "@/components/ui/momentum-badge";
-import { Sparkline } from "@/components/ui/sparkline";
 import { SectionHeader } from "./section-header";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
-import { X, ArrowLeft, AlertCircle } from "lucide-react";
+import { X, ArrowLeft, AlertCircle, TrendingUp, TrendingDown } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 
 interface SubtrendDetailDrawerProps {
@@ -86,26 +85,35 @@ export function SubtrendDetailDrawer({ subtrend, isOpen, onClose }: SubtrendDeta
         {/* Metrics */}
         <div className="space-y-4">
           <div className="flex items-center gap-4">
-            <MomentumBadge score={subtrend.momentum_score} size="lg" />
+            <MomentumBadge 
+              score={subtrend.momentum_score} 
+              change={subtrend.change_30d_pct}
+              size="lg" 
+            />
             <div className="text-sm text-muted-foreground">
               Current momentum score
             </div>
           </div>
           
-          {/* Trend chart */}
+          {/* 30-day change indicator */}
           <div>
             <div className="flex items-center justify-between mb-2">
-              <span className="text-sm text-muted-foreground">30-day trend</span>
-              <span className="text-xs font-mono text-muted-foreground">
-                {subtrend.sparkline.length} data points
-              </span>
+              <span className="text-sm text-muted-foreground">30-day change</span>
             </div>
-            <div className="flex justify-center p-4 glass rounded-lg">
-              <Sparkline 
-                data={subtrend.sparkline}
-                width={isMobile ? 280 : 360}
-                height={60}
-              />
+            <div className="flex items-center gap-3 p-4 glass rounded-lg">
+              {subtrend.change_30d_pct > 0 ? (
+                <TrendingUp className="w-6 h-6 text-momentum-up" />
+              ) : (
+                <TrendingDown className="w-6 h-6 text-momentum-down" />
+              )}
+              <div>
+                <div className="text-lg font-semibold">
+                  {subtrend.change_30d_pct > 0 ? '+' : ''}{subtrend.change_30d_pct.toFixed(1)}%
+                </div>
+                <div className="text-xs text-muted-foreground">
+                  vs previous 30 days
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -115,7 +123,7 @@ export function SubtrendDetailDrawer({ subtrend, isOpen, onClose }: SubtrendDeta
       <div className="flex-1 overflow-y-auto p-6">
         <SectionHeader
           title="Top Startups"
-          description="The most promising companies in this space"
+          description="These startups ride the wave spotted by Butterfly"
           className="mb-6 text-left"
         />
         

@@ -1,8 +1,8 @@
 import { motion } from "framer-motion";
 import { Subtrend } from "@/types";
 import { MomentumBadge } from "@/components/ui/momentum-badge";
-import { Sparkline } from "@/components/ui/sparkline";
 import { Card } from "@/components/ui/card";
+import { TrendingUp, TrendingDown, Minus } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface SubtrendTileProps {
@@ -36,25 +36,37 @@ export function SubtrendTile({ subtrend, index, onClick, className }: SubtrendTi
           </div>
           
           <div className="ml-3 flex-shrink-0">
-            <MomentumBadge score={subtrend.momentum_score} size="sm" />
+            <MomentumBadge 
+              score={subtrend.momentum_score} 
+              change={subtrend.change_30d_pct}
+              size="sm" 
+            />
           </div>
         </div>
         
-        {/* Sparkline */}
+        {/* Change indicator */}
         <div className="mt-auto">
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-xs text-muted-foreground">30-day trend</span>
-            <span className="text-xs font-mono text-muted-foreground">
-              {subtrend.sparkline.length} points
-            </span>
-          </div>
-          
-          <div className="flex justify-center">
-            <Sparkline 
-              data={subtrend.sparkline}
-              width={120}
-              height={32}
-            />
+          <div className="flex items-center justify-between">
+            <span className="text-xs text-muted-foreground">30-day change</span>
+            <div className="flex items-center gap-1">
+              {subtrend.change_30d_pct > 0 ? (
+                <TrendingUp className="w-3 h-3 text-momentum-up" />
+              ) : subtrend.change_30d_pct < 0 ? (
+                <TrendingDown className="w-3 h-3 text-momentum-down" />
+              ) : (
+                <Minus className="w-3 h-3 text-momentum-neutral" />
+              )}
+              <span className={cn(
+                "text-xs font-mono",
+                subtrend.change_30d_pct > 0 
+                  ? "text-momentum-up" 
+                  : subtrend.change_30d_pct < 0 
+                    ? "text-momentum-down" 
+                    : "text-momentum-neutral"
+              )}>
+                {subtrend.change_30d_pct > 0 ? '+' : ''}{subtrend.change_30d_pct.toFixed(1)}%
+              </span>
+            </div>
           </div>
         </div>
         
