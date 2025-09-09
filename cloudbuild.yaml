@@ -7,8 +7,9 @@ steps:
     args: ['install', '-g', 'firebase-tools']
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
     args: ['gcloud', 'config', 'set', 'project', 'tum-cdtm25mun-8792']
-  - name: 'gcr.io/cloud-builders/npm'
-    args: ['exec', 'firebase', 'deploy', '--only', 'hosting', '--project', 'tum-cdtm25mun-8792']
+  - name: "us-docker.pkg.dev/firebase-cli/us/firebase"
+    args: ['deploy', '--project=tum-cdtm25mun-8792', '--only=hosting']
+
 
 
 options:
