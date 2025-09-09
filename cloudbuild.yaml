@@ -1,0 +1,11 @@
+steps:
+  - name: 'gcr.io/cloud-builders/npm'
+    args: ['install']
+  - name: 'gcr.io/cloud-builders/npm'
+    args: ['run', 'build']
+  - name: 'gcr.io/cloud-builders/npm'
+    args: ['install', '-g', 'firebase-tools']
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    args: ['gcloud', 'config', 'set', 'project', 'tum-cdtm25mun-8792']
+  - name: 'gcr.io/cloud-builders/npm'
+    args: ['run', 'firebase', 'deploy']
