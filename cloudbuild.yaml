@@ -9,3 +9,7 @@ steps:
     args: ['gcloud', 'config', 'set', 'project', 'tum-cdtm25mun-8792']
   - name: 'gcr.io/cloud-builders/npm'
     args: ['run', 'firebase', 'deploy']
+
+
+options:
+  logging: NONE
