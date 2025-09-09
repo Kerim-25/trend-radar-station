@@ -12,6 +12,4 @@ steps:
 
 options:
   logging: CLOUD_LOGGING_ONLY # Or NONE, depending on your preference
-  logs_bucket: 'gs://cloubduild-logs-cdtm-ai-hack' # <-- Add this line
-
 
