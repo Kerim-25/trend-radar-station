@@ -1,24 +1,24 @@
-# TrendScouter 🚀
+# Butterfly 🦋
 
-A stunning, production-quality frontend for tracking the hottest technology trends and emerging markets. Built with React, TypeScript, and modern web technologies for optimal performance and user experience.
+A stunning, production-quality frontend for **Butterfly** — helping VCs determine, spot, and trace market trends before they become big. Surfacing resources and insights VCs can rely on. Built with React, TypeScript, and modern web technologies for optimal performance and user experience.
 
 ## ✨ Features
 
 ### Core Functionality
-- **🔥 Hot Trends Dashboard**: View the top 3 trending technologies with momentum scores and 30-day changes
-- **📊 Subtrends Explorer**: Dive deep into subsectors with interactive sparklines and momentum metrics  
+- **🔥 Top 3 Trends Dashboard**: View the hottest trending technologies with momentum scores and 30-day changes
+- **📊 Subtrends Explorer**: Dive deep into subsectors with momentum metrics and trend indicators  
 - **🏢 Startup Discovery**: Explore the most promising startups in each subtrend
 - **⚙️ Settings Panel**: Configure API endpoints or use local mock data
 
 ### Design & UX
-- **🎨 Glass-morphism UI**: Premium dark theme with subtle gradients and glass effects
+- **🎨 Premium Dark Theme**: Sleek glass-morphism UI with teal/blue gradient backgrounds
 - **📱 Mobile-first**: Fully responsive design optimized for all screen sizes
 - **♿ Accessibility**: WCAG AA compliant with keyboard navigation and screen reader support
 - **🎭 Smooth Animations**: Framer Motion powered micro-interactions and page transitions
 - **💨 Fast Performance**: Optimized for Lighthouse scores with lazy loading and efficient caching
 
 ### Technical Excellence
-- **🔧 API-Ready Architecture**: Seamlessly switch between mock data and live backend
+- **🔧 API-Ready Architecture**: Seamlessly switch between mock data and live GCP backend
 - **🔄 Smart Caching**: In-memory caching with automatic expiration and retry logic
 - **🛡️ Error Handling**: Graceful fallbacks with friendly error messages
 - **🧪 Type Safety**: Full TypeScript coverage for robust development
@@ -34,7 +34,7 @@ A stunning, production-quality frontend for tracking the hottest technology tren
 ```bash
 # Clone the repository
 git clone <your-repo-url>
-cd trendscouter
+cd butterfly
 
 # Install dependencies
 npm install
@@ -63,7 +63,8 @@ VITE_API_BASE_URL=https://your-api.cloudfunctions.net
 src/
 ├── components/           # Reusable UI components
 │   ├── ui/              # shadcn/ui components
-│   ├── hero-section.tsx # Landing hero with top trends
+│   ├── butterfly-header.tsx # Butterfly branding header
+│   ├── hero-section.tsx # Landing hero with top 3 trends
 │   ├── subtrends-section.tsx # Subtrends grid
 │   └── subtrend-detail-drawer.tsx # Startup details
 ├── lib/
@@ -84,22 +85,25 @@ src/
 ## 🎯 Core Views
 
 ### 1. Hero Section (Top 3 Trends)
-- Full-screen hero with animated gradient background
-- Large, interactive trend cards with momentum meters
+- Butterfly header with logo and tagline "Catch the breeze before it turns into a hurricane"
+- Three trend cards with clear visual hierarchy (Top 1 > Top 2 > Top 3)
 - Glass-morphism design with hover parallax effects
-- Animated progress bars and sparkle effects for top trends
+- Animated momentum meters and sparkle effects for top trends
+- Moving background media per trend reflecting its industry
 
 ### 2. Subtrends Grid
-- Responsive masonry layout of subtrend tiles
-- Real-time sparklines showing 30-day momentum
+- Responsive grid layout of subtrend tiles
+- Momentum metrics without sparklines (numerical indicators only)
 - Sortable by momentum score or alphabetical
 - Smooth scroll reveal animations
+- Butterfly branding: "Spotted early by Butterfly"
 
 ### 3. Subtrend Detail Drawer
 - Slide-over drawer (desktop) / full-screen sheet (mobile)
 - Detailed momentum analytics and trend visualization
 - Top 3 startups with logos, descriptions, and external links
 - Keyboard navigation (ESC to close)
+- Microcopy: "These startups ride the wave spotted by Butterfly"
 
 ## 🔌 API Integration
 
@@ -126,6 +130,7 @@ interface Trend {
   momentum_score: number;    // 0-100
   change_30d_pct: number;   // percentage
   image_url?: string;
+  bg_media_url?: string;    // Optional moving background media
 }
 
 interface Subtrend {
@@ -134,7 +139,7 @@ interface Subtrend {
   name: string;
   description: string;
   momentum_score: number;
-  sparkline: number[];      // 30-day values
+  change_30d_pct: number;   // 30-day percentage change
 }
 
 interface Startup {
@@ -204,15 +209,20 @@ npm run type-check
 ## 🎨 Design System
 
 ### Color Palette
-- **Primary**: Momentum green (#10B981) for positive trends
-- **Destructive**: Alert red (#EF4444) for declining trends  
-- **Neutral**: Amber (#F59E0B) for stable trends
-- **Glass Effects**: Semi-transparent overlays with backdrop blur
+- **Background**: Dark navy/slate/teal gradient for premium feel
+- **Surfaces**: Glassy dark neutrals with teal-blue glow
+- **Primary**: Electric Blue (#3B82F6) for highlights and CTAs
+- **Signature**: Vivid Yellow (#FACC15) for emerging trends (sparingly)
+- **Momentum Signals**: 
+  - Up/Growth: Neon teal-green (#14B8A6)
+  - Neutral: Soft amber (#F59E0B)
+  - Down: Warm red (#EF4444)
 
 ### Components
-- **MomentumBadge**: Displays scores with trend indicators
-- **Sparkline**: Pure SVG mini-charts for trend visualization
-- **TrendCard**: Interactive cards with animated progress meters
+- **ButterflyHeader**: Prominent header with logo and tagline
+- **MomentumBadge**: Displays scores with trend indicators (no sparklines)
+- **TrendCard**: Interactive cards with rank hierarchy and animated progress meters
+- **SectionSeparator**: Animated dividers between major sections
 - **LoadingSkeleton**: Shimmer loading states for all content types
 
 ### Animations
@@ -220,6 +230,7 @@ npm run type-check
 - Hover parallax effects on cards
 - Smooth scroll-to-section navigation
 - Reduced motion support for accessibility
+- Moving background media for trend cards (low-bandwidth, optional)
 
 ## 🔧 Configuration
 
@@ -227,7 +238,7 @@ npm run type-check
 - **API URL Configuration**: Set/change backend endpoint at runtime
 - **Connection Testing**: Test API connectivity with latency display
 - **Mock Data Toggle**: Switch between live API and local mocks
-- **Cache Management**: Clear cached data for fresh requests
+- **Reduced Motion Toggle**: Enable/disable animated backgrounds
 
 ### Local Storage
 Settings persist across sessions:
@@ -249,14 +260,35 @@ Settings persist across sessions:
 - Component-driven architecture
 - Responsive design utilities from Tailwind
 
+## 🦋 Butterfly Brand Identity
+
+### Mission & Values
+Butterfly helps VCs **catch the breeze before it turns into a hurricane** by:
+- Spotting early market shifts and emerging patterns
+- Providing reliable signals for confident investment decisions
+- Connecting emerging trends to startup opportunities
+- Surfacing resources and insights VCs can trust
+
+### Brand Elements
+- **Logo**: Butterfly symbol (placeholder for uploaded SVG)
+- **Tagline**: "Catch the breeze before it turns into a hurricane"
+- **Colors**: Premium dark theme with teal/blue gradients
+- **Voice**: Professional, trustworthy, forward-looking
+
+### Microcopy Integration
+Strategic placement of VC-focused messaging:
+- Hero section: "Insights VCs can rely on"
+- Subtrends: "Spotted early by Butterfly"
+- Startup details: "These startups ride the wave spotted by Butterfly"
+
 ## 🚀 Performance
 
 ### Optimization Features
 - **Tree Shaking**: Only used components included in bundle
 - **Code Splitting**: Dynamic imports for route-based splitting
-- **Image Optimization**: WebP format with fallbacks
+- **Media Optimization**: Lightweight video loops with fallbacks
 - **Caching Strategy**: Intelligent cache invalidation
-- **Bundle Analysis**: Visualize bundle size and dependencies
+- **Reduced Motion**: Respects user accessibility preferences
 
 ### Lighthouse Scores Target
 - **Performance**: >90
@@ -284,7 +316,7 @@ The app is prepared for analytics integration:
 ## 📞 Support
 
 For questions or issues:
-1. Check the [troubleshooting guide](#troubleshooting)
+1. Check the troubleshooting guide
 2. Search existing GitHub issues
 3. Create a new issue with detailed reproduction steps
 
@@ -294,4 +326,6 @@ MIT License - see LICENSE file for details.
 
 ---
 
-**Built with ❤️ using React, TypeScript, Tailwind CSS, and Framer Motion**
+**Built with ❤️ by Butterfly using React, TypeScript, Tailwind CSS, and Framer Motion**
+
+*Catch the breeze before it turns into a hurricane.* 🦋

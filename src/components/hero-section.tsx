@@ -5,8 +5,7 @@ import { fetchTrends } from "@/lib/api";
 import { TrendCard } from "./trend-card";
 import { LoadingSkeleton } from "./loading-skeleton";
 import { Button } from "@/components/ui/button";
-import { SectionHeader } from "./section-header";
-import { ChevronDown, TrendingUp, AlertCircle, RefreshCw } from "lucide-react";
+import { ChevronDown, AlertCircle, RefreshCw } from "lucide-react";
 
 interface HeroSectionProps {
   onExploreClick: (trendId: string) => void;
@@ -44,40 +43,33 @@ export function HeroSection({ onExploreClick }: HeroSectionProps) {
   };
 
   return (
-    <section className="min-h-screen flex flex-col relative overflow-hidden">
+    <section className="min-h-screen flex flex-col relative overflow-hidden pt-20">
       {/* Background effects */}
-      <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-accent/5" />
-      <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/10 rounded-full blur-3xl" />
-      <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-accent/10 rounded-full blur-3xl" />
+      <div className="absolute inset-0 bg-gradient-to-br from-signature-teal/5 via-transparent to-primary/5" />
+      <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-signature-teal/10 rounded-full blur-3xl" />
+      <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-primary/10 rounded-full blur-3xl" />
       
       {/* Content */}
       <div className="relative z-10 flex-1 flex flex-col justify-center px-4 py-20">
         <div className="container mx-auto max-w-7xl">
-          {/* Header */}
+          {/* Hero Title */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
             className="text-center mb-16"
           >
-            <div className="flex items-center justify-center gap-2 mb-4">
-              <TrendingUp className="w-6 h-6 text-primary" />
-              <span className="text-sm uppercase tracking-wider text-primary/80 font-medium">
-                TrendScouter
-              </span>
-            </div>
-            
             <h1 className="text-4xl md:text-6xl font-bold mb-6">
-              <span className="bg-gradient-to-r from-foreground via-primary to-accent bg-clip-text text-transparent">
-                Hottest Trends
+              <span className="bg-gradient-to-r from-foreground via-signature-teal to-primary bg-clip-text text-transparent">
+                Top 3 Trends
               </span>
               <br />
               <span className="text-foreground/80">Right Now</span>
             </h1>
             
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-              Discover the technologies and markets with the highest momentum. 
-              Real-time insights from startup activity, investment flows, and innovation signals.
+              The highest momentum technologies and markets. 
+              Insights VCs can rely on from startup activity, investment flows, and innovation signals.
             </p>
           </motion.div>
 
@@ -125,14 +117,25 @@ export function HeroSection({ onExploreClick }: HeroSectionProps) {
           )}
 
           {!loading && !error && trends.length > 0 && (
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 mb-16">
               {trends.map((trend, index) => (
-                <TrendCard
+                <motion.div
                   key={trend.id}
-                  trend={trend}
-                  rank={index + 1}
-                  onClick={() => onExploreClick(trend.id)}
-                />
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ delay: index * 0.2, duration: 0.6 }}
+                  className={`
+                    ${index === 0 ? 'md:scale-110 md:z-10 relative' : ''}
+                    ${index === 1 ? 'md:scale-105' : ''}
+                    ${index === 2 ? 'md:scale-100' : ''}
+                  `}
+                >
+                  <TrendCard
+                    trend={trend}
+                    rank={index + 1}
+                    onClick={() => onExploreClick(trend.id)}
+                  />
+                </motion.div>
               ))}
             </div>
           )}
