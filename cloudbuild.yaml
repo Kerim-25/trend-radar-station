@@ -8,7 +8,8 @@ steps:
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
     args: ['gcloud', 'config', 'set', 'project', 'tum-cdtm25mun-8792']
   - name: 'gcr.io/cloud-builders/npm'
-    args: ['run', 'firebase', 'deploy']
+    args: ['exec', 'firebase', 'deploy', '--only', 'hosting', '--project', 'tum-cdtm25mun-8792']
+
 
 options:
   logging: CLOUD_LOGGING_ONLY # Or NONE, depending on your preference
