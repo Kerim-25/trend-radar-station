@@ -70,10 +70,9 @@ export function SubtrendsSection({ selectedTrendId, onSubtrendClick }: Subtrends
       <div className="absolute inset-0 bg-gradient-to-b from-surface/20 to-transparent" />
       
       <div className="container mx-auto max-w-7xl relative z-10">
-        {/* Header */}
         <SectionHeader
           eyebrow="Spotted early by Butterfly"
-          title="Hottest Subtrends Now"
+          title="Explore In-Depth Subtrends"
           description="Subsectors with the highest momentum — reliable signals for smart investors"
           tooltip="Subtrends are ranked by momentum score, calculated from startup activity, funding, and market signals"
           className="mb-12"
