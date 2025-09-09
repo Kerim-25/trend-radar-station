@@ -10,6 +10,8 @@ steps:
   - name: 'gcr.io/cloud-builders/npm'
     args: ['run', 'firebase', 'deploy']
 
-
 options:
-  logging: NONE
+  logging: CLOUD_LOGGING_ONLY # Or NONE, depending on your preference
+  logs_bucket: 'gs:// cloubduild-logs-cdtm-ai-hack' # <-- Add this line
+
+
