@@ -1,103 +1,244 @@
+// TrendScouter API Layer with retry, timeout, and caching
 
+import { Trend, Subtrend, Startup, ApiError } from '@/types';
 
-import { Trend, Subtrend, Startup } from '@/types';
-import { analysisState } from './state'; // Import our new state store
+// Import mock data
+import mockTrends from '@/mocks/trends.json';
+import mockSubtrendsDefenseTech from '@/mocks/subtrends-defense-tech.json';
+import mockSubtrendsClimateSolutions from '@/mocks/subtrends-climate-solutions.json';
+import mockStartupsMilitaryDrones from '@/mocks/startups-military-drones.json';
+import mockStartupsCarbon from '@/mocks/startups-carbon-capture.json';
 
-// --- Configuration ---
-// These are the details for your live, deployed backend.
-const API_BASE_URL = "https://trend-agent-api-launch-703557862737.europe-west1.run.app";
-const API_KEY = "your-super-secret-key"; // IMPORTANT: Replace with the key you set during deployment!
+const API_TIMEOUT = 10000; // 10 seconds
+const MAX_RETRIES = 2;
+const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
 
-// The frontend timeout MUST be equal to or longer than the backend timeout.
-// Your backend timeout is 900 seconds (15 minutes).
-const API_TIMEOUT = 900 * 1000;
+// Simple in-memory cache
+const cache = new Map<string, { data: any; timestamp: number }>();
 
-// ====================================================================================
-// THE ONLY FUNCTION THAT MAKES A NETWORK CALL
-// ====================================================================================
+// API configuration
+const getApiBaseUrl = (): string | null => {
+  return import.meta.env.VITE_API_BASE_URL || localStorage.getItem('apiBaseUrl') || null;
+};
 
-/**
- * Triggers the full analysis on the backend, fetches the complete data structure,
- * and stores it in the local analysisState for fast access by the UI.
- * Your UI should call this function once when the analysis needs to start.
- */
-export const runFullAnalysis = async (): Promise<void> => {
-  // 1. Set the global loading state so your UI can show a spinner.
-  analysisState.isLoading = true;
-  analysisState.error = null;
-  console.log("Starting full analysis... This may take several minutes.");
+const shouldUseMocks = (): boolean => {
+  return !getApiBaseUrl() || localStorage.getItem('useMocks') === 'true';
+};
 
-  try {
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), API_TIMEOUT);
+// Cache utilities
+const getCacheKey = (endpoint: string): string => `api:${endpoint}`;
 
-    // 2. Call the backend's single 'analyze' endpoint.
-    const response = await fetch(`${API_BASE_URL}/analyze`, {
-  method: "POST",
-  headers: {
-    "Content-Type": "application/json",
-    "X-API-KEY": API_KEY,
-  },
-  signal: controller.signal,
-});
-    clearTimeout(timeoutId);
-
-  if (!response.ok) {
-    const errorData = await response.json();
-    throw new Error(errorData.detail || `Server returned an error: ${response.statusText}`);
+const getCachedData = (key: string): any => {
+  const cached = cache.get(key);
+  if (!cached) return null;
+  
+  const isExpired = Date.now() - cached.timestamp > CACHE_DURATION;
+  if (isExpired) {
+    cache.delete(key);
+    return null;
   }
-
-    const result = await response.json();
-    
-    // 3. The backend returns a JSON object where the 'report' field is a STRING.
-    // We must parse this inner string to get the actual data object.
-    const reportData = JSON.parse(result.report);
-
-    // 4. Store the successful result in our global state.
-    analysisState.trends = reportData.trends || [];
-    console.log("Analysis complete. Data stored locally.", analysisState.trends);
-    
-  } catch (error) {
-    const errorMessage = error instanceof Error ? error.message : "An unknown error occurred.";
-    console.error("Failed to run full analysis:", errorMessage);
-    analysisState.error = errorMessage;
-    analysisState.trends = []; // Clear any stale data on error
-  } finally {
-    // 5. Always set loading to false when the process is finished.
-    analysisState.isLoading = false;
-  }
+  
+  return cached.data;
 };
 
-// ====================================================================================
-// FUNCTIONS TO READ DATA FROM THE LOCAL STATE (INSTANTANEOUS)
-// ====================================================================================
-
-/**
- * Gets the top-level trends from the local state. Does NOT make a network call.
- */
-export const getTrends = async (limit?: number): Promise<Trend[]> => {
-  const trends = analysisState.trends;
-  return limit ? trends.slice(0, limit) : trends;
+const setCachedData = (key: string, data: any): void => {
+  cache.set(key, { data, timestamp: Date.now() });
 };
 
-/**
- * Gets the subtrends for a specific trend ID from the local state.
- */
-export const getSubtrends = async (trendId: string): Promise<Subtrend[]> => {
-  const trend = analysisState.trends.find(t => t.id === trendId);
-  return trend ? trend.subtrends : [];
-};
-
-/**
- * Gets the startups for a specific subtrend ID from the local state.
- */
-export const getStartups = async (subtrendId: string): Promise<Startup[]> => {
-  // Search through all trends and their subtrends to find the matching one.
-  for (const trend of analysisState.trends) {
-    const subtrend = trend.subtrends.find(st => st.id === subtrendId);
-    if (subtrend) {
-      return subtrend.startups;
+// Mock data helpers
+const getMockData = async (endpoint: string): Promise<any> => {
+  // Simulate API delay
+  await new Promise(resolve => setTimeout(resolve, 200 + Math.random() * 300));
+  
+  if (endpoint.startsWith('/trends')) {
+    if (endpoint.includes('limit=3') || endpoint === '/trends') {
+      return mockTrends.slice(0, 3);
     }
   }
-  return []; // Return empty if not found
+  
+  if (endpoint.includes('/subtrends')) {
+    const trendId = endpoint.split('/')[2];
+    if (trendId === 'defense-tech') {
+      return mockSubtrendsDefenseTech;
+    }
+    if (trendId === 'climate-solutions') {
+      return mockSubtrendsClimateSolutions;
+    }
+  }
+  
+  if (endpoint.includes('/startups')) {
+    const subtrendId = endpoint.split('/')[2];
+    if (subtrendId === 'military-drones') {
+      return mockStartupsMilitaryDrones;
+    }
+    if (subtrendId === 'carbon-capture') {
+      return mockStartupsCarbon;
+    }
+  }
+  
+  throw new Error(`Mock data not found for endpoint: ${endpoint}`);
+};
+
+// HTTP client with retry and timeout
+const fetchWithRetry = async (url: string, options: RequestInit = {}): Promise<Response> => {
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), API_TIMEOUT);
+  
+  let lastError: Error | null = null;
+  
+  for (let attempt = 0; attempt <= MAX_RETRIES; attempt++) {
+    try {
+      const response = await fetch(url, {
+        ...options,
+        signal: controller.signal,
+        headers: {
+          'Content-Type': 'application/json',
+          ...options.headers,
+        },
+      });
+      
+      clearTimeout(timeoutId);
+      
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+      }
+      
+      return response;
+    } catch (error) {
+      lastError = error as Error;
+      
+      // Don't retry on abort (timeout) or client errors (4xx)
+      if (error instanceof Error && 
+          (error.name === 'AbortError' || 
+           (error.message.includes('HTTP 4')))) {
+        break;
+      }
+      
+      // Wait before retry (exponential backoff)
+      if (attempt < MAX_RETRIES) {
+        await new Promise(resolve => setTimeout(resolve, Math.pow(2, attempt) * 1000));
+      }
+    }
+  }
+  
+  clearTimeout(timeoutId);
+  throw lastError || new Error('Request failed');
+};
+
+// Main API functions
+export const fetchTrends = async (limit?: number): Promise<Trend[]> => {
+  const endpoint = `/trends${limit ? `?limit=${limit}` : ''}`;
+  const cacheKey = getCacheKey(endpoint);
+  
+  // Check cache first
+  const cached = getCachedData(cacheKey);
+  if (cached) return cached;
+  
+  try {
+    if (shouldUseMocks()) {
+      const data = await getMockData(endpoint);
+      setCachedData(cacheKey, data);
+      return data;
+    }
+    
+    const baseUrl = getApiBaseUrl();
+    if (!baseUrl) {
+      throw new Error('API base URL not configured');
+    }
+    
+    const response = await fetchWithRetry(`${baseUrl}${endpoint}`);
+    const data = await response.json();
+    setCachedData(cacheKey, data);
+    return data;
+  } catch (error) {
+    console.error('Error fetching trends:', error);
+    throw new Error(`Failed to fetch trends: ${error instanceof Error ? error.message : 'Unknown error'}`);
+  }
+};
+
+export const fetchSubtrends = async (trendId: string): Promise<Subtrend[]> => {
+  const endpoint = `/trends/${trendId}/subtrends`;
+  const cacheKey = getCacheKey(endpoint);
+  
+  const cached = getCachedData(cacheKey);
+  if (cached) return cached;
+  
+  try {
+    if (shouldUseMocks()) {
+      const data = await getMockData(endpoint);
+      setCachedData(cacheKey, data);
+      return data;
+    }
+    
+    const baseUrl = getApiBaseUrl();
+    if (!baseUrl) {
+      throw new Error('API base URL not configured');
+    }
+    
+    const response = await fetchWithRetry(`${baseUrl}${endpoint}`);
+    const data = await response.json();
+    setCachedData(cacheKey, data);
+    return data;
+  } catch (error) {
+    console.error('Error fetching subtrends:', error);
+    throw new Error(`Failed to fetch subtrends: ${error instanceof Error ? error.message : 'Unknown error'}`);
+  }
+};
+
+export const fetchStartups = async (subtrendId: string, limit: number = 3): Promise<Startup[]> => {
+  const endpoint = `/subtrends/${subtrendId}/startups?limit=${limit}`;
+  const cacheKey = getCacheKey(endpoint);
+  
+  const cached = getCachedData(cacheKey);
+  if (cached) return cached;
+  
+  try {
+    if (shouldUseMocks()) {
+      const data = await getMockData(endpoint);
+      setCachedData(cacheKey, data);
+      return data;
+    }
+    
+    const baseUrl = getApiBaseUrl();
+    if (!baseUrl) {
+      throw new Error('API base URL not configured');
+    }
+    
+    const response = await fetchWithRetry(`${baseUrl}${endpoint}`);
+    const data = await response.json();
+    setCachedData(cacheKey, data);
+    return data;
+  } catch (error) {
+    console.error('Error fetching startups:', error);
+    throw new Error(`Failed to fetch startups: ${error instanceof Error ? error.message : 'Unknown error'}`);
+  }
+};
+
+// Utility functions for settings
+export const testConnection = async (): Promise<{ success: boolean; latency?: number; error?: string }> => {
+  const startTime = Date.now();
+  
+  try {
+    if (shouldUseMocks()) {
+      await getMockData('/trends?limit=1');
+      return { success: true, latency: Date.now() - startTime };
+    }
+    
+    const baseUrl = getApiBaseUrl();
+    if (!baseUrl) {
+      return { success: false, error: 'API base URL not configured' };
+    }
+    
+    await fetchWithRetry(`${baseUrl}/trends?limit=1`);
+    return { success: true, latency: Date.now() - startTime };
+  } catch (error) {
+    return { 
+      success: false, 
+      error: error instanceof Error ? error.message : 'Connection failed' 
+    };
+  }
+};
+
+export const clearCache = (): void => {
+  cache.clear();
 };
