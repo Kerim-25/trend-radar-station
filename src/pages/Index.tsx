@@ -1,8 +1,10 @@
 import { useState } from "react";
 import { Subtrend } from "@/types";
+import { ButterflyHeader } from "@/components/butterfly-header";
 import { HeroSection } from "@/components/hero-section";
 import { SubtrendsSection } from "@/components/subtrends-section";
 import { SubtrendDetailDrawer } from "@/components/subtrend-detail-drawer";
+import { SectionSeparator } from "@/components/section-separator";
 import { SettingsPanel } from "@/components/settings-panel";
 
 const Index = () => {
@@ -35,14 +37,23 @@ const Index = () => {
       {/* Settings Panel */}
       <SettingsPanel />
       
+      {/* Butterfly Header */}
+      <ButterflyHeader />
+      
       {/* Hero Section */}
       <HeroSection onExploreClick={handleExploreClick} />
+      
+      {/* Section Separator */}
+      <SectionSeparator />
       
       {/* Subtrends Section */}
       <SubtrendsSection
         selectedTrendId={selectedTrendId}
         onSubtrendClick={handleSubtrendClick}
       />
+      
+      {/* Section Separator */}
+      <SectionSeparator />
       
       {/* Subtrend Detail Drawer */}
       <SubtrendDetailDrawer
