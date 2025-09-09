@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Subtrend } from "@/types";
-import { fetchSubtrends } from "@/lib/api";
+import { getSubtrends } from "@/lib/api";
 import { SubtrendTile } from "./subtrend-tile";
 import { LoadingSkeleton } from "./loading-skeleton";
 import { SectionHeader } from "./section-header";
@@ -24,7 +24,7 @@ export function SubtrendsSection({ selectedTrendId, onSubtrendClick }: Subtrends
     setError(null);
     
     try {
-      const data = await fetchSubtrends(trendId);
+      const data = await getSubtrends(trendId);
       setSubtrends(data);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to load subtrends');
