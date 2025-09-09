@@ -2,6 +2,7 @@ import { motion } from "framer-motion";
 import { Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import butterflyLogo from "@/assets/butterfly-logo.svg";
 
 interface ButterflyHeaderProps {
   onSettingsClick?: () => void;
@@ -19,7 +20,7 @@ export function ButterflyHeader({ onSettingsClick, className }: ButterflyHeaderP
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}
       className={cn(
-        "relative z-50 w-full border-b border-border/50 backdrop-blur-md",
+        "relative z-50 w-full border-b border-border/50 backdrop-blur-md sticky top-0",
         "bg-gradient-to-r from-background/95 via-background/90 to-background/95",
         className
       )}
@@ -28,10 +29,15 @@ export function ButterflyHeader({ onSettingsClick, className }: ButterflyHeaderP
         <div className="flex items-center justify-between">
           {/* Logo & Brand */}
           <div className="flex items-center gap-4">
-            {/* Logo placeholder - will be replaced with uploaded SVG */}
-            <div className="w-10 h-10 rounded-lg bg-gradient-cta flex items-center justify-center text-white font-bold text-lg">
-              B
-            </div>
+            {/* Butterfly Logo */}
+            <motion.img
+              src={butterflyLogo}
+              alt="Butterfly logo - a gradient butterfly symbolizing catching market trends early"
+              className="w-10 h-10 drop-shadow-lg"
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ duration: 0.5 }}
+            />
             
             <div className="flex flex-col">
               <h1 className="text-xl font-bold tracking-tight text-foreground">
