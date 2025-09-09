@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Trend } from "@/types";
-import { fetchTrends } from "@/lib/api";
+import { getTrends } from "@/lib/api";
 import { TrendCard } from "./trend-card";
 import { LoadingSkeleton } from "./loading-skeleton";
 import { Button } from "@/components/ui/button";
@@ -21,7 +21,7 @@ export function HeroSection({ onExploreClick }: HeroSectionProps) {
     setError(null);
     
     try {
-      const data = await fetchTrends(3);
+      const data = await getTrends(3);
       setTrends(data);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to load trends');
