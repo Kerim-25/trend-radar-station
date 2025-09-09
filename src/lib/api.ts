@@ -32,21 +32,20 @@ export const runFullAnalysis = async (): Promise<void> => {
     const timeoutId = setTimeout(() => controller.abort(), API_TIMEOUT);
 
     // 2. Call the backend's single 'analyze' endpoint.
-    const response = await fetch(${API_BASE_URL}/analyze, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "X-API-KEY": API_KEY,
-      },
-      signal: controller.signal,
-    });
-
+    const response = await fetch(`${API_BASE_URL}/analyze`, {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+    "X-API-KEY": API_KEY,
+  },
+  signal: controller.signal,
+});
     clearTimeout(timeoutId);
 
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.detail || Server returned an error: ${response.statusText});
-    }
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.detail || `Server returned an error: ${response.statusText}`);
+  }
 
     const result = await response.json();
     
